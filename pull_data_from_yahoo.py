@@ -1,4 +1,5 @@
 import requests
+import json
 from world_indice import world_indices
 
 
@@ -8,11 +9,22 @@ def pull_data_from_yahoo():
                'indicators': 'close',
                'includeTimestamps': 'false',
                'includePrePost': 'false', 'corsDomain': 'uk.finance.yahoo.com &.tsrc = finance'}
+    result_list = []
     for key in world_indices:
-        payload['symbols'] = world_indices[key]
+        payload['symbols'] = key
         response = requests.get(url, params=payload, verify=False)
-        break
+        response = json.loads(response.content)
+        try:
+            intraday_vlaues = response['spark']['result'][0]['response'][0]['indicators']['quote'][0]['close']
+        except:
+            continue
 
+        closing_value = next((re for re in reversed(intraday_vlaues) if re), None)
+        if not closing_value:
+            print "An error occured , No closing value found"
 
+        opening_value = response['spark']['result'][0]['response'][0]['meta']['previousClose']
+        result_list.append((key, closing_value, opening_value))
+    return result_list
 
-pull_data_from_yahoo()
+print pull_data_from_yahoo()
