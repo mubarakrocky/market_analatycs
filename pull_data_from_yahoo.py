@@ -1,8 +1,9 @@
 import requests
 import json
+from celery_settings import app
 from world_indice import world_indices
 
-
+@app.task
 def pull_data_from_yahoo():
     url = 'https://query1.finance.yahoo.com/v7/finance/spark'
     payload = {'range': '1d', 'interval': '1m',
@@ -27,4 +28,3 @@ def pull_data_from_yahoo():
         result_list.append((key, closing_value, opening_value))
     return result_list
 
-print pull_data_from_yahoo()
