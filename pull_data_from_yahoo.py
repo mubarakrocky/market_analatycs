@@ -1,5 +1,6 @@
 import requests
 import json
+from conf import conn
 from celery_settings import app
 from world_indice import world_indices
 
@@ -28,3 +29,4 @@ def pull_data_from_yahoo():
         result_list.append((key, closing_value, opening_value))
     return result_list
 
+pull_data_from_yahoo()
