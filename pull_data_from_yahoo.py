@@ -1,6 +1,5 @@
 import requests
 import json
-from conf import conn
 from celery_settings import app
 from world_indice import world_indices
 
@@ -23,7 +22,7 @@ def pull_data_from_yahoo():
 
         closing_value = next((re for re in reversed(intraday_vlaues) if re), None)
         if not closing_value:
-            print "An error occured , No closing value found"
+            print("An error occured , No closing value found")
 
         opening_value = response['spark']['result'][0]['response'][0]['meta']['previousClose']
         result_list.append((key, closing_value, opening_value))
